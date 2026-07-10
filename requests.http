@@ -1,0 +1,37 @@
+### Health check
+GET http://localhost:5007/health
+
+### User list - should still work after Router refactor
+GET http://localhost:5007/users
+
+### Create user - should still work after Router refactor
+POST http://localhost:5007/users
+Content-Type: application/json
+
+{
+  "name": "Mali",
+  "email": "mali@example.com"
+}
+
+### Invalid user create - should return 400
+POST http://localhost:5007/users
+Content-Type: application/json
+
+{
+  "name": "Mali"
+}
+
+### Product list - private fields must disappear after DTO task
+GET http://localhost:5007/products
+
+### Create product - private input fields must be ignored after DTO task
+POST http://localhost:5007/products
+Content-Type: application/json
+
+{
+  "name": "Laptop Stand",
+  "category": "Accessories",
+  "price": 790,
+  "cost_price": 310,
+  "supplier_note": "Client must not control this field"
+}
