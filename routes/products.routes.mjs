@@ -1,19 +1,36 @@
-import { Router } from "express";
-import { createProduct, listProducts } from "../data/products.store.mjs";
+import { Router } from 'express';
+import { createProduct, listProducts } from '../data/products.store.mjs';
 import {
   createProductInputDto,
   publicProductDto,
-} from "../dto/products.dto.mjs";
+} from '../dto/products.dto.mjs';
 
 const productsRouter = Router();
 
-// TODO Router 4: สร้าง GET / โดยย้าย logic จาก app.mjs มาไว้ที่นี่
-// TODO Router 5: สร้าง POST / โดยย้าย logic จาก app.mjs มาไว้ที่นี่
-// TODO Router 6: export default productsRouter แล้ว import ไป mount ใน app.mjs
+productsRouter.get('/', (req, res) => {
+  return res.status(200).json({
+    data: listProducts().map(publicProductDto),
+  });
+});
 
-void createProduct;
-void listProducts;
-void createProductInputDto;
-void publicProductDto;
+productsRouter.post('/', (req, res) => {
+  const productInput = createProductInputDto(req.body);
 
+  if (
+    !productInput.name ||
+    !productInput.category ||
+    typeof productInput.price !== 'number'
+  ) {
+    return res.status(400).json({
+      message: 'name, category, and numeric price are required',
+    });
+  }
+
+  const newProduct = createProduct(productInput);
+
+  return res.status(201).json({
+    message: 'Created product successfully',
+    data: publicProductDto(newProduct),
+  });
+});
 export default productsRouter;
